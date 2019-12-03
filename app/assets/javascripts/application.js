@@ -8,3 +8,10 @@
 //= require jquery_ujs
 //= require twitter/bootstrap
 //= require_tree .
+//= require jquery
+//= require jquery_ujs
+//= require twitter/bootstrap
+
+$(function(){
+    /* Your JavaScript goes here... */
+  });
