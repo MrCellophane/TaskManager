@@ -1,5 +1,6 @@
 # README
 [![Build Status](https://travis-ci.org/MrCellophane/TaskManager.svg?branch=feature%2Ftravis)](https://travis-ci.org/MrCellophane/TaskManager)
+[![Coverage Status](https://coveralls.io/repos/github/MrCellophane/TaskManager/badge.svg?branch=develop)](https://coveralls.io/github/MrCellophane/TaskManager?branch=develop)
 
 This README would normally document whatever steps are necessary to get the
 application up and running.
