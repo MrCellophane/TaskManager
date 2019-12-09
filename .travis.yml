@@ -13,3 +13,4 @@ before_install:
 script:
   - docker-compose run --rm web /bin/sh -c "RAILS_ENV=test  bundle exec rake test"
   - docker-compose run --rm web /bin/sh -c "RAILS_ENV=test  bundle exec rake test"
+  - docker-compose run --rm web /bin/sh -c "RAILS_ENV=test bundle exec rubocop"
