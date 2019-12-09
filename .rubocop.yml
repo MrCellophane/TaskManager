@@ -1,6 +1,9 @@
 AllCops:
   Exclude:
     - config/initializers/secret_token.rb
+    - config/initializers/simple_form_bootstrap.rb
+    - node_modules/**/*
+    - bin/*
 
 
 Style/FrozenStringLiteralComment:
