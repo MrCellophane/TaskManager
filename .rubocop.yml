@@ -47,3 +47,6 @@ Style/AsciiComments:
 
 Style/For:
   Enabled: false
+
+Style/TrailingCommaInArrayLiteral:
+  Enabled: false
