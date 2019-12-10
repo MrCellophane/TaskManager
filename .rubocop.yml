@@ -4,7 +4,13 @@ AllCops:
     - config/initializers/simple_form_bootstrap.rb
     - node_modules/**/*
     - bin/*
+    - vendor/*
 
+Style/TrailingCommaInArrayLiteral:
+  Enabled: false
+
+Style/TrailingCommaInHashLiteral:
+  Enabled: false
 
 Style/FrozenStringLiteralComment:
   Enabled: false
@@ -46,7 +52,4 @@ Style/AsciiComments:
   Enabled: false
 
 Style/For:
-  Enabled: false
-
-Style/TrailingCommaInArrayLiteral:
   Enabled: false
