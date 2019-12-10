@@ -5,6 +5,7 @@ AllCops:
     - node_modules/**/*
     - bin/*
     - vendor/**/*
+    - db/schema.rb
 
 Style/FrozenStringLiteralComment:
   Enabled: false
