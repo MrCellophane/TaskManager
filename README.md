@@ -1,4 +1,5 @@
 # README
+[![Build Status](https://travis-ci.org/MrCellophane/TaskManager.svg?branch=feature%2Ftravis)](https://travis-ci.org/MrCellophane/TaskManager)
 
 This README would normally document whatever steps are necessary to get the
 application up and running.
