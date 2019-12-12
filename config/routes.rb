@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
-  root to: 'web/board#show'
+  root to: 'web/boards#show'
+
+  post '/board'/ to 'web/boards#show'
 
   scope module: :web do
     resource :session, only: %i[new create destroy]
