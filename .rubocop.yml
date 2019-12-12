@@ -37,6 +37,9 @@ Metrics/ModuleLength:
 Metrics/PerceivedComplexity:
   Max: 10
 
+Metrics/BlockLength:
+  Max: 30
+
 Style/NumericLiterals:
   Enabled: false
 
@@ -48,3 +51,5 @@ Style/AsciiComments:
 
 Style/For:
   Enabled: false
+
+    
