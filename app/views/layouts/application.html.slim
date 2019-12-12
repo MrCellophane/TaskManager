@@ -16,6 +16,18 @@ html lang="en"
           span.icon-bar
         a.navbar-brand href="#" Task Manager
 
+  ul.nav.navbar-nav
+    li= link_to "Board", board_path
+    - if current_user
+      li= link_to current_user.first_name
+      li= link_to "Log out", session_path, method: "delete", confirm: "confirm?", remote: true
+    - else
+      li= link_to "Sign in", new_session_path
+      li= link_to "Sign up", new_developer_path
+
+
+  
+
   .container
     .row
       .col-lg-12
@@ -24,13 +36,4 @@ html lang="en"
 
     footer
       p
-      p &copy; Company 2018
-
-      ul.nav.navbar-nav
-        li= link_to "Board", board_path, method: "show"
-        - if current_user
-          li= link_to current_user.first_name
-          li= link_to "Log out", session_path, method: "delete", confirm: "confirm?", remote: true
-        - else
-          li= link_to "Sign in", new_session_path
-          li= link_to "Sign up", new_developer_path
+      p &copy; Company 2019
