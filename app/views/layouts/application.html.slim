@@ -8,6 +8,7 @@ html lang="en"
     = csrf_meta_tags
     = stylesheet_link_tag "application", :media => "all"
     = javascript_include_tag "application"
+  
   body
   ul.nav.navbar-nav
       li= link_to "Board", board_path, method: "show"
@@ -17,11 +18,13 @@ html lang="en"
       - else
         li= link_to "Sign in", new_session_path
         li= link_to "Sign up", new_developer_path
+  
   .container
     .row
       .col-lg-12
         = bootstrap_flash
         = yield
+    
     footer
       p
       p &copy; Company 2018
