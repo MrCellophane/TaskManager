@@ -55,5 +55,6 @@ group :test do
 end
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'bullet', group: 'development'
+gem 'newrelic_rpm'
 gem 'rollbar'
 gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
