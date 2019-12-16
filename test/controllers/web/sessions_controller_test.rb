@@ -4,7 +4,7 @@ require 'test_helper'
 
 class Web::SessionsControllerTest < ActionDispatch::IntegrationTest
   test 'should get new' do
-    get board_url
+    get new_session_url
     assert_response :success
   end
   test 'should post create' do
