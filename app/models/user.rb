@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class User < ApplicationRecord
+  include UserStaf
+
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i.freeze
   has_secure_password
   has_many :my_tasks, class_name: 'Task', foreign_key: :author_id
@@ -13,8 +15,4 @@ class User < ApplicationRecord
   validates :last_name, length: { minimum: 2 }
   validates :email, presence: true, format: { with: VALID_EMAIL_REGEX }
   validates :email, uniqueness: true
-
-  def name
-    "#{first_name} #{last_name}"
-  end
 end
