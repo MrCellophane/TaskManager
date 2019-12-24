@@ -10,4 +10,8 @@ Rails.application.routes.draw do
     resource :board, only: :show
     resources :developers, only: %i[new create]
   end
+
+  namespace :admin do
+    resources :users
+  end
 end
