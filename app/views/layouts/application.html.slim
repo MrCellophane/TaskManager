@@ -29,7 +29,6 @@ html lang="en"
           .col-lg-3
             ul.nav.navbar-nav
               -if current_user
-                li= current_user
                 li= user_full_name(current_user)
                 li= link_to "Log out", session_path, method: "delete"
               -else
