@@ -8,6 +8,7 @@ html lang="en"
     = csrf_meta_tags
     = stylesheet_link_tag "application", :media => "all"
     = javascript_include_tag "application"
+    = javascript_pack_tag "application"
 
   body
   .navbar.navbar-default.navbar-static-top
@@ -28,7 +29,6 @@ html lang="en"
           .col-lg-3
             ul.nav.navbar-nav
               -if current_user
-                li= current_user
                 li= user_full_name(current_user)
                 li= link_to "Log out", session_path, method: "delete"
               -else
