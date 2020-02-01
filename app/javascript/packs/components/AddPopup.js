@@ -1,81 +1,86 @@
 import React from 'react';
-import { Modal, Button, FormGroup, ControlLabel, FormControl } from 'react-bootstrap';
+import { Modal, Button, Form } from 'react-bootstrap';
 import { fetch } from './Fetch';
-
-export default class EditPopup extends React.Component {
+export default class AddPopup extends React.Component {
   state = {
     name: '',
     description: '',
-      assignee: {
-        id: null,
-        first_name: null,
-        last_name:  null,
-        email: null
-      }
+    assignee: {
+      id: null,
+      first_name: null,
+      last_name:  null,
+      email: null
+    }
   }
-
   handleNameChange = (e) => {
     this.setState({ name: e.target.value });
   }
-
   handleDecriptionChange = (e) => {
     this.setState({ description: e.target.value });
   }
-
   handleCardAdd = () => {
+    const { name, description, assignee } = this.state;
     fetch('POST', window.Routes.api_v1_tasks_path(), {
       task: {
-        name: this.state.name,
-        description: this.state.description,
-        assignee_id: this.state.assignee.id
+        name,
+        description,
+        assignee_id: assignee.id
       }
     }).then( response => {
-    if (response.statusText == 'Created') {
+      if (response.statusText == 'Created') {
         this.props.onClose(true);
+        this.setState({ 
+          name: '',
+          description: ''
+        });
       }
       else {
-        alert(response.status + ' - ' + response.statusText);
+        alert(`Update failed! ${response.status} - ${response.statusText}`);
       }
-    });
+      },
+      (errors) => alert(`Update failed! ${errors}`)
+    );
   }
-
   render () {
-    return <div>
-      <Modal show={this.props.show} onHide={this.props.onClose}>
+    return(
+      <Modal
+      size="lg"
+      animation={false}
+      show={this.props.show} 
+      onHide={this.props.onClose}
+      >
         <Modal.Header closeButton>
-          <Modal.Title>
-            New task
-          </Modal.Title>
+          <Modal.Title>New task</Modal.Title>
         </Modal.Header>
-
         <Modal.Body>
-          <form>
-            <FormGroup controlId="formTaskName">
-              <ControlLabel>Task name:</ControlLabel>
-              <FormControl
+          <Form>
+            <Form.Group controlId="formTaskName">
+              <Form.Label>Task name:</Form.Label>
+              <Form.Control
                 type="text"
                 value={this.state.name}
                 placeholder='Set the name for the task'
                 onChange={this.handleNameChange}
               />
-            </FormGroup>
-            <FormGroup controlId="formDescriptionName">
-              <ControlLabel>Task description:</ControlLabel>
-              <FormControl
-                componentClass="textarea"
+            </Form.Group>
+            <Form.Group controlId="formDescriptionName">
+              <Form.Label>Task description:</Form.Label>
+              <Form.Control
+                as="textarea" rows="3"
                 value={this.state.description}
                 placeholder='Set the description for the task'
                 onChange={this.handleDecriptionChange}
               />
-            </FormGroup>
-          </form>
+            </Form.Group>
+          </Form>
         </Modal.Body>
-
         <Modal.Footer>
-          <Button onClick={this.props.onClose}>Close</Button>
-          <Button bsStyle="primary" onClick={this.handleCardAdd}>Save changes</Button>
+          <Button variant="secondary" 
+            onClick={this.props.onClose}>Close</Button>
+          <Button variant="primary" 
+            onClick={this.handleCardAdd}>Save changes</Button>
         </Modal.Footer>
       </Modal>
-    </div>
+    )
   }
 }

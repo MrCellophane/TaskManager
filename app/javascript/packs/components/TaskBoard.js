@@ -1,11 +1,14 @@
-import React from 'react'
-import Board from 'react-trello'
-
+import React from "react";
+import Board from "react-trello";
 import { fetch } from './Fetch';
 import LaneHeader from './LaneHeader';
-import { Button } from 'react-bootstrap';
+import Button from 'react-bootstrap/Button';
 import AddPopup from './AddPopup';
-import EditPopup from './EditPopup';
+
+
+const components = {
+  LaneHeader: LaneHeader
+};
 
 export default class TasksBoard extends React.Component {
   state = {
@@ -16,11 +19,9 @@ export default class TasksBoard extends React.Component {
       in_code_review: null,
       ready_for_release: null,
       released: null,
-      archived: null,
-      addPopupShow: false,
-      editPopupShow: false,
-      editCardId: null
-    }
+      archived: null
+    },
+    addPopupShow: false
   }
 
   generateLane(id, title) {
@@ -81,7 +82,7 @@ export default class TasksBoard extends React.Component {
       return data;
     })
   }
-  
+
   onLaneScroll = (requestedPage, state) => {
     return this.fetchLine(state, requestedPage).then(({items}) => {
       return items.map((task) => {
@@ -93,6 +94,7 @@ export default class TasksBoard extends React.Component {
       });
     })
   }
+
   handleDragEnd = (cardId, sourceLaneId, targetLaneId) => {
     fetch('PUT', window.Routes.api_v1_task_path(cardId, { format: 'json' }), { task: { state: targetLaneId } })
       .then(() => {
@@ -111,56 +113,28 @@ export default class TasksBoard extends React.Component {
       this.loadLine('new_task');
     };
   }
-
-  onCardClick = (cardId) => {
-    this.setState({editCardId: cardId});
-    this.handleEditShow();
-  }
   
-  handleEditClose = ( edited = '' ) => {
-    this.setState({ editPopupShow: false, editCardId: null});
-    switch (edited) {
-      case 'new_task':
-      case 'in_development':
-      case 'in_qa':
-      case 'in_code_review':
-      case 'ready_for_release':
-      case 'released':
-      case 'archived':
-        this.loadLine(edited);
-        break;
-      default:
-        break;
-    }
-  }
-  
-  handleEditShow = () => {
-    this.setState({ editPopupShow: true });
-  }
-
   render() {
     return <div>
       <h1>Your tasks</h1>
-      <Button bsStyle="primary" onClick={this.handleAddShow}>Create new task</Button>
+      <Button variant="primary" 
+          onClick={this.handleAddShow}>Create new task
+      </Button>
       <Board
         data={this.getBoard()}
         onLaneScroll={this.onLaneScroll}
         customLaneHeader={<LaneHeader/>}
-        cardsMeta={this.state} 
+        cardsMeta={this.state}
         draggable
         laneDraggable={false}
         handleDragEnd={this.handleDragEnd}
-        onCardClick={this.onCardClick}
+        components={components} 
       />
       <AddPopup
         show = {this.state.addPopupShow}
         onClose={this.handleAddClose}
       />
-      <EditPopup
-        show = {this.state.editPopupShow}
-        onClose={this.handleEditClose}
-        cardId ={this.state.editCardId}
-      />
+      
     </div>;
   }
 }
