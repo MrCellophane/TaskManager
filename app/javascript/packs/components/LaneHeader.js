@@ -1,9 +1,28 @@
-import React from 'react'
+import React from 'react';
+import PropTypes from 'prop-types';
 
 export default class LaneHeader extends React.Component {
-  render () {
-    return <div>
-      <b>{this.props.id}</b> ({this.props.cards.length}/{this.props.total_count})
-    </div>
+  render() {
+    const { id, cards, total_count } = this.props;
+    return (
+      <div>
+        <b>{id}</b>
+        {' '}
+        (
+        {cards.length}
+        /
+        {total_count}
+        )
+      </div>
+    );
   }
 }
+
+LaneHeader.propTypes = {
+  id: PropTypes.number.isRequired,
+  cards: PropTypes.string.isRequired,
+  total_count: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number,
+  ]).isRequired,
+};

@@ -1,13 +1,13 @@
-import React from "react";
-import Board from "react-trello";
+import React from 'react';
+import Board from 'react-trello';
+import Button from 'react-bootstrap/Button';
 import { fetch } from './Fetch';
 import LaneHeader from './LaneHeader';
-import Button from 'react-bootstrap/Button';
 import AddPopup from './AddPopup';
 import EditPopup from './EditPopup';
 
 const components = {
-  LaneHeader: LaneHeader
+  LaneHeader,
 };
 
 export default class TasksBoard extends React.Component {
@@ -22,7 +22,7 @@ export default class TasksBoard extends React.Component {
       archived: null,
       addPopupShow: false,
       editPopupShow: false,
-      editCardId: null
+      editCardId: null,
     },
   }
 
@@ -33,14 +33,16 @@ export default class TasksBoard extends React.Component {
       id,
       title,
       total_count: (tasks) ? tasks.meta.total_count : 'None',
-      cards: (tasks) ? tasks.items.map((task) => {
-        return {
-          ...task,
-          label: task.state,
-          title: task.name
-        };
-      }) : []
-    }
+      cards: (tasks) ? tasks.items.map((task) => ({
+        ...task,
+        label: task.state,
+        title: task.name,
+      })) : [],
+    };
+  }
+
+  componentDidMount() {
+    this.loadLines();
   }
 
   getBoard() {
@@ -67,35 +69,20 @@ export default class TasksBoard extends React.Component {
     this.loadLine('archived');
   }
 
-  componentDidMount() {
-    this.loadLines();
-  }
 
   loadLine(state, page = 1) {
-    this.fetchLine(state, page).then(( data ) => {
+    this.fetchLine(state, page).then((data) => {
       this.setState({
-        [state]: data
+        [state]: data,
       });
     });
   }
 
-  fetchLine(state, page = 1) {
-    return fetch('GET', window.Routes.api_v1_tasks_path({ q: { state_eq: state }, page: page, per_page: 10, format: 'json' })).then(({data}) => {
-      return data;
-    })
-  }
-
-  onLaneScroll = (requestedPage, state) => {
-    return this.fetchLine(state, requestedPage).then(({items}) => {
-      return items.map((task) => {
-        return {
-          ...task,
-          label: task.state,
-          title: task.name
-        };
-      });
-    })
-  }
+  onLaneScroll = (requestedPage, state) => this.fetchLine(state, requestedPage).then(({ items }) => items.map((task) => ({
+    ...task,
+    label: task.state,
+    title: task.name,
+  })))
 
   handleDragEnd = (cardId, sourceLaneId, targetLaneId) => {
     fetch('PUT', window.Routes.api_v1_task_path(cardId, { format: 'json' }), { task: { state: targetLaneId } })
@@ -108,21 +95,21 @@ export default class TasksBoard extends React.Component {
   handleAddShow = () => {
     this.setState({ addPopupShow: true });
   }
-  
-  handleAddClose = ( added = false ) => {
+
+  handleAddClose = (added = false) => {
     this.setState({ addPopupShow: false });
-    if (added == true) {
+    if (added === true) {
       this.loadLine('new_task');
-    };
+    }
   }
 
   onCardClick = (cardId) => {
-    this.setState({editCardId: cardId});
+    this.setState({ editCardId: cardId });
     this.handleEditShow();
   }
-  
-  handleEditClose = ( edited = '' ) => {
-    this.setState({ editPopupShow: false, editCardId: null});
+
+  handleEditClose = (edited = '') => {
+    this.setState({ editPopupShow: false, editCardId: null });
     switch (edited) {
       case 'new_task':
       case 'in_development':
@@ -137,37 +124,49 @@ export default class TasksBoard extends React.Component {
         break;
     }
   }
-  
+
   handleEditShow = () => {
     this.setState({ editPopupShow: true });
   }
-  
+
+  fetchLine(state, page = 1) {
+    return fetch('GET', window.Routes.api_v1_tasks_path({
+      q: { state_eq: state }, page, per_page: 10, format: 'json',
+    })).then(({ data }) => data);
+  }
+
   render() {
-    return <div>
-      <h1>Your tasks</h1>
-      <Button variant="primary" 
-          onClick={this.handleAddShow}>Create new task
-      </Button>
-      <Board
-        data={this.getBoard()}
-        onLaneScroll={this.onLaneScroll}
-        customLaneHeader={<LaneHeader/>}
-        cardsMeta={this.state}
-        draggable
-        laneDraggable={false}
-        handleDragEnd={this.handleDragEnd}
-        components={components} 
-        onCardClick={this.onCardClick}
-      />
-      <AddPopup
-        show = {this.state.addPopupShow}
-        onClose={this.handleAddClose}
-      />
-      <EditPopup
-        show = {this.state.editPopupShow}
-        onClose={this.handleEditClose}
-        cardId ={this.state.editCardId}
-      />
-    </div>;
+    const { addPopupShow, editCardId } = this.state;
+    return (
+      <div>
+        <h1>Your tasks</h1>
+        <Button
+          variant="info"
+          onClick={this.handleAddShow}
+        >
+          Create new task
+        </Button>
+        <Board
+          data={this.getBoard()}
+          onLaneScroll={this.onLaneScroll}
+          customLaneHeader={<LaneHeader />}
+          cardsMeta={this.state}
+          draggable
+          laneDraggable={false}
+          handleDragEnd={this.handleDragEnd}
+          components={components}
+          onCardClick={this.onCardClick}
+        />
+        <AddPopup
+          show={addPopupShow}
+          onClose={this.handleAddClose}
+        />
+        <EditPopup
+          show={this.state.editPopupShow}
+          onClose={this.handleEditClose}
+          cardId={editCardId}
+        />
+      </div>
+    );
   }
 }

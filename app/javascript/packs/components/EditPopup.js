@@ -1,6 +1,9 @@
 import React from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
+import PropTypes from 'prop-types';
 import { fetch } from './Fetch';
+
+
 export default class EditPopup extends React.Component {
   state = {
     task: {
@@ -12,122 +15,157 @@ export default class EditPopup extends React.Component {
         id: null,
         first_name: null,
         last_name: null,
-        email: null
+        email: null,
       },
       assignee: {
         id: null,
         first_name: null,
-        last_name:  null,
-        email: null
-      }
+        last_name: null,
+        email: null,
+      },
     },
-    isLoading: true
+    isLoading: true,
   }
+
   loadCard = (cardId) => {
     this.setState({ isLoading: true });
-    fetch('GET', window.Routes.api_v1_task_path(cardId, {format: 'json'})).then(({data}) => {
-      this.setState({ task: data});
-      if(this.state.task.author.id) {
-        this.setState({ isLoading: false });
-      }
+    fetch('GET', window.Routes.api_v1_task_path(cardId, { format: 'json' })).then(({ data }) => {
+      this.setState({ task: data, isLoading: false });
+      
     });
   }
-  componentDidUpdate (prevProps) {
-    if (this.props.cardId != null && this.props.cardId !== prevProps.cardId) {
-      this.loadCard(this.props.cardId);
-    };
+  //componentDidUpdate (prevProps) {
+   // const { cardId } = this.props;
+   // if (cardId != null && cardId !== prevProps.cardId) {
+    //  this.loadCard(cardId);
+   // }
+  //}
+
+  componentDidMount() {
+    const { cardId } = this.props;
+    if (cardId != null) {
+      this.loadCard(cardId);
+    }
   }
+
+
   handleNameChange = (e) => {
-    this.setState({ task: { ...this.state.task, name: e.target.value }});
+    const { task } = this.state;
+    this.setState({ task: { ...task, name: e.target.value } });
   }
+
   handleDecriptionChange = (e) => {
-    this.setState({ task: { ...this.state.task, description: e.target.value }});
+    const { task } = this.state;
+    this.setState({ task: { ...task, description: e.target.value } });
   }
+
   handleCardEdit = () => {
-    fetch('PUT', window.Routes.api_v1_task_path(this.props.cardId, {format: 'json'}), {
-      name: this.state.task.name,
-      description: this.state.task.description,
-      author_id: this.state.task.author.id,
-      state: this.state.task.state
-    }).then( response => {
-      if (response.statusText == 'OK') {
-        this.props.onClose(this.state.task.state);
-      }
-      else {
-        alert('Update failed! ' + response.status + ' - ' + response.statusText);
+    const { cardId, onClose } = this.props;
+    const { task } = this.state;
+    fetch('PUT', window.Routes.api_v1_task_path(cardId, { format: 'json' }), {
+      name: task.name,
+      description: task.description,
+      author_id: task.author.id,
+      state: task.state,
+    }).then((response) => {
+      if (response.statusText === 'OK') {
+        onClose(task.state);
+      } else {
+        alert(`Update failed! ${response.status} - ${response.statusText}`);
       }
     });
   }
+
   handleCardDelete = () => {
-    fetch('DELETE', window.Routes.api_v1_task_path(this.props.cardId, { format: 'json' }))
-      .then( response => {
-        if (response.statusText == 'OK') {
-          this.props.onClose(this.state.task.state);
-        }
-        else {
-          alert('DELETE failed! ' + response.status + ' - ' + response.statusText);
+    const { cardId, onClose } = this.props;
+    const { task } = this.state;
+    fetch('DELETE', window.Routes.api_v1_task_path(cardId, { format: 'json' }))
+      .then((response) => {
+        if (response.statusText === 'OK') {
+          onClose(task.state);
+        } else {
+          alert(`DELETE failed! ${response.status} - ${response.statusText}`);
         }
       });
   }
-  
-  render () {
-    if (this.state.isLoading) {
+
+  render() {
+    const { show, onClose } = this.props;
+    const { task, isLoading } = this.state;
+    if (isLoading) {
       return (
-        <Modal animation={false} show={this.props.show} onHide={this.props.onClose}>
+        <Modal animation={false} show={show} onHide={onClose}>
           <Modal.Header closeButton>
             <Modal.Title>
               Info
             </Modal.Title>
           </Modal.Header>
-           <Modal.Body>
+          <Modal.Body>
             Your task is loading. Please be patient.
           </Modal.Body>
-           <Modal.Footer>
-            <Button onClick={this.props.onClose}>Close</Button>
+          <Modal.Footer>
+            <Button onClick={onClose}>Close</Button>
           </Modal.Footer>
         </Modal>
-      )
-    } 
+      );
+    }
     return (
       <div>
-        <Modal animation={false} show={this.props.show} onHide={this.props.onClose}>
+        <Modal animation={false} show={show} onHide={onClose}>
           <Modal.Header closeButton>
             <Modal.Title>
-              Task # {this.state.task.id} [{this.state.task.state}]
+              Task #
+              {' '}
+              {task.id}
+              {' '}
+              [
+              {task.state}
+              ]
             </Modal.Title>
           </Modal.Header>
-          
+
           <Modal.Body>
             <Form>
               <Form.Group controlId="formTaskName">
                 <Form.Label>Task name:</Form.Label>
                 <Form.Control
                   type="text"
-                  value={this.state.task.name}
-                  placeholder='Set the name for the task'
+                  value={task.name}
+                  placeholder="Set the name for the task"
                   onChange={this.handleNameChange}
                 />
               </Form.Group>
               <Form.Group controlId="formDescriptionName">
                 <Form.Label>Task description:</Form.Label>
                 <Form.Control
-                  as="textarea" rows="3"
-                  value={this.state.task.description}
-                  placeholder='Set the description for the task'
+                  as="textarea"
+                  rows="3"
+                  value={task.description}
+                  placeholder="Set the description for the task"
                   onChange={this.handleDecriptionChange}
                 />
               </Form.Group>
             </Form>
-            Author: {this.state.task.author.first_name} {this.state.task.author.last_name}
+            Author:
+            {' '}
+            {task.author.first_name}
+            {' '}
+            {task.author.last_name}
           </Modal.Body>
 
           <Modal.Footer>
             <Button variant="danger" onClick={this.handleCardDelete}>Delete</Button>
-            <Button variant="secondary" onClick={this.props.onClose}>Close</Button>
+            <Button variant="secondary" onClick={onClose}>Close</Button>
             <Button variant="success" onClick={this.handleCardEdit}>Save changes</Button>
           </Modal.Footer>
         </Modal>
       </div>
-    )
+    );
   }
 }
+
+EditPopup.propTypes = {
+  show: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+  cardId: PropTypes.number.isRequired,
+};

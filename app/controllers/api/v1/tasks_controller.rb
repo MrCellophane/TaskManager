@@ -32,20 +32,18 @@ class Api::V1::TasksController < Api::V1::ApplicationController
     task = current_user.my_tasks.find(params[:id])
 
     task.update(task_params)
-    respond_with(task)
+    respond_with(task, json: task)
   end
 
   def destroy
     task = Task.find(params[:id])
     task.destroy
-    respond_with(task)
+    respond_with(task, json: task)
   end
 
   private
 
   def task_params
-    params.require(:task).permit(:name, :description, :author_id, :assignee_id,
-                                 :state_event,
-                                 author_id: current_user.id)
+    params.require(:task).permit(:name, :description, :author_id, :assignee_id, :state, :state_event)
   end
 end
