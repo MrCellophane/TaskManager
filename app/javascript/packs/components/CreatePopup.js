@@ -1,9 +1,9 @@
 import React from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 import PropTypes from 'prop-types';
-import { fetch } from './Fetch';
+import TaskRepository from './TaskRepository';
 
-export default class AddPopup extends React.Component {
+export default class CreatePopup extends React.Component {
   state = {
     name: '',
     description: '',
@@ -23,27 +23,22 @@ export default class AddPopup extends React.Component {
     this.setState({ description: e.target.value });
   }
 
-  handleCardAdd = () => {
-    const { onClose } = this.props;
+  handleCardCreate = () => {
     const { name, description, assignee } = this.state;
-    fetch('POST', window.Routes.api_v1_tasks_path(), {
+    const { onTaskCreate } = this.props;
+    TaskRepository.create({
       task: {
         name,
         description,
-        assignee_id: assignee.id,
+        assigneeId: assignee.id,
       },
-    }).then((response) => {
-      if (response.statusText === 'Created') {
-        onClose(true);
-        this.setState({
-          name: '',
-          description: '',
-        });
-      } else {
-        alert(`Update failed! ${response.status} - ${response.statusText}`);
-      }
-    },
-    (errors) => alert(`Update failed! ${errors}`));
+    }).then(() => {
+      onTaskCreate();
+      this.setState({
+        name: '',
+        description: '',
+      });
+    });
   }
 
   render() {
@@ -91,7 +86,7 @@ export default class AddPopup extends React.Component {
           </Button>
           <Button
             variant="primary"
-            onClick={this.handleCardAdd}
+            onClick={this.handleCardCreate}
           >
             Save changes
           </Button>
@@ -101,7 +96,8 @@ export default class AddPopup extends React.Component {
   }
 }
 
-AddPopup.propTypes = {
+CreatePopup.propTypes = {
   show: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
+  onTaskCreate: PropTypes.func.isRequired,
 };

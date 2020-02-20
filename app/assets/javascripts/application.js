@@ -9,6 +9,6 @@
 //= require twitter/bootstrap
 //= require js-routes
 
-$(function(){
-    /* Your JavaScript goes here... */
-  });
+$(() => {
+  /* Your JavaScript goes here... */
+});
