@@ -27,12 +27,17 @@ export default class EditPopup extends React.Component {
     isLoading: true,
   }
 
-   componentDidUpdate (prevProps) {
-   const { cardId } = this.props;
-   if (cardId != null && cardId !== prevProps.cardId) {
+  // componentDidUpdate (prevProps) {
+  // const { cardId } = this.props;
+  // if (cardId != null && cardId !== prevProps.cardId) {
+  //  this.loadCard(cardId);
+  // }
+  // }
+
+  componentDidMount() {
+    const { cardId } = this.props;
     this.loadCard(cardId);
-   }
-   }
+  }
 
   loadCard = (cardId) => {
     this.setState({ isLoading: true });
@@ -54,15 +59,15 @@ export default class EditPopup extends React.Component {
 
   handleCardEdit = () => {
     const { cardId, onClose } = this.props;
-    const { task } = this.state;
+    const { name, description, author, state } = this.state.task;
 
     TaskRepository.update(cardId, {
-      name: task.name,
-      description: task.description,
-      author_id: task.author.id,
-      state: task.state,
+      name: name,
+      description: description,
+      author_id: author.id,
+      state: state,
     }).then(() => {
-      onClose(task.state);
+      onClose(state);
     });
   }
 

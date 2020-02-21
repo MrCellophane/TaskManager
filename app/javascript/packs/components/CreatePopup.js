@@ -30,7 +30,7 @@ export default class CreatePopup extends React.Component {
       task: {
         name,
         description,
-        assigneeId: assignee.id,
+        assignee_id: assignee.id,
       },
     }).then(() => {
       onTaskCreate();

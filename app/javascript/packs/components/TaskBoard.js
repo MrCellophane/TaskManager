@@ -20,10 +20,10 @@ export default class TasksBoard extends React.Component {
       ready_for_release: null,
       released: null,
       archived: null,
-      isCreateModalOpen: false,
+    },
+    isCreateModalOpen: false,
       isEditModalOpen: false,
       editCardId: null,
-    },
   }
 
 
@@ -168,13 +168,15 @@ export default class TasksBoard extends React.Component {
         <CreatePopup
           show={isCreateModalOpen}
           onClose={this.handleCreateClose}
-          onTaskCreate={this.handleTaskCreate}
+          onTaskCreate={this.handleTaskCreated}
         />
+        {isEditModalOpen && (
         <EditPopup
           show={isEditModalOpen}
           onClose={this.handleEditClose}
           cardId={editCardId}
         />
+        )}
       </div>
     );
   }
