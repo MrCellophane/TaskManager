@@ -13,26 +13,19 @@ export default class EditPopup extends React.Component {
       state: null,
       author: {
         id: null,
-        first_name: null,
-        last_name: null,
+        firstName: null,
+        lastName: null,
         email: null,
       },
       assignee: {
         id: null,
-        first_name: null,
-        last_name: null,
+        firstName: null,
+        lastName: null,
         email: null,
       },
     },
     isLoading: true,
   }
-
-  // componentDidUpdate (prevProps) {
-  // const { cardId } = this.props;
-  // if (cardId != null && cardId !== prevProps.cardId) {
-  //  this.loadCard(cardId);
-  // }
-  // }
 
   componentDidMount() {
     const { cardId } = this.props;
@@ -64,7 +57,7 @@ export default class EditPopup extends React.Component {
     TaskRepository.update(cardId, {
       name: name,
       description: description,
-      author_id: author.id,
+      authorId: author.id,
       state: state,
     }).then(() => {
       onClose(state);
@@ -139,9 +132,9 @@ export default class EditPopup extends React.Component {
             </Form>
             Author:
             {' '}
-            {task.author.first_name}
+            {task.author.firstName}
             {' '}
-            {task.author.last_name}
+            {task.author.lastName}
           </Modal.Body>
 
           <Modal.Footer>
