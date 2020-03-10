@@ -63,4 +63,5 @@ gem 'responders'
 gem 'rollbar'
 gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
 
+gem 'js-routes'
 gem 'webpacker-react'
