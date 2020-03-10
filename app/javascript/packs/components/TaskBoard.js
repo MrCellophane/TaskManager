@@ -157,7 +157,6 @@ export default class TasksBoard extends React.Component {
         <Board
           data={this.getBoard()}
           onLaneScroll={this.onLaneScroll}
-          customLaneHeader={<LaneHeader />}
           cardsMeta={this.state}
           draggable
           laneDraggable={false}
